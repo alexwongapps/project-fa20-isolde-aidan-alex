@@ -20,3 +20,8 @@ When writing inputs/outputs:
 - Make sure you use the functions `write_input_file` and `write_output_file` provided
 - Run the functions `read_input_file` and `read_output_file` to validate your files before submitting!
   - These are the functions run by the autograder to validate submissions
+
+Our best happinesses: 
+- 10: 462.356
+- 20: 1743.448
+- 50: 8707.883

@@ -29,7 +29,7 @@ class Zoom:
         self.rooms = rooms
         self.graph = graph
         self.num_students = num_students
-        self.add_random_students()
+        self.add_all_students()
         
     def add_random_students(self):
         lst = self.partition([i for i in range(self.num_students)], randint(1, self.num_students - 1))
