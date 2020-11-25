@@ -1,4 +1,5 @@
 from random import *
+from utils import *
 def create_input_file(n, max_stress):
     ret = ""
     ret += str(n) + "\n"
@@ -22,4 +23,46 @@ def generate_output(lst):
     return ret
 
 
-print(generate_output([[7, 13, 1, 12], [10, 14, 16, 5], [11, 15, 3], [0, 17, 19], [2, 18, 8], [9, 4, 6]]))
+# print(generate_output([[3, 11, 15, 7], [8, 5, 17], [4, 14, 0], [18, 2, 10, 12], [9, 1], [16, 13, 19, 6]]))
+
+def generate_input(lst):
+    lst1 = lst[0]
+    lst2 = lst[1]
+    print(lst)
+    size = len(lst1) + len(lst2)
+    ret = ""
+    ret += str(size) + "\n"
+    ret += str(size) + "\n"
+
+    for i in range(size):
+        if i in lst1:
+            index = 0
+        else:
+            index = 1
+        for j in range(size):
+            if i < j:
+                if j in lst[index]:
+                    rand_stress = uniform(0, 1)
+                    rand_happiness = uniform(size, size+10)
+                else:
+                    rand_stress = uniform(size, size+10)
+                    rand_happiness = uniform(0, 1)
+                ret += str(i) + " " + str(j) + " " + str(round(rand_happiness, 3)) + " " + str(round(rand_stress, 3))
+                ret += "\n"
+    return ret
+
+def generate_lst(s):
+    lst = [[], []]
+    for i in range(s):
+        check = randint(0,1)
+        if check == 0:
+            lst[0] += [i]
+        else:
+            lst[1] += [i]
+    return lst
+            
+
+#print(generate_input(generate_lst(10)))
+print(generate_output([[2, 7, 8, 13, 15, 16, 18, 19, 20, 21, 23, 24, 25, 26, 32, 34, 35, 36, 38, 39, 41, 43, 44, 45, 46, 47, 49], [0, 1, 3, 4, 5, 6, 9, 10, 11, 12, 14, 17, 22, 27, 28, 29, 30, 31, 33, 37, 40, 42, 48]]))
+
+

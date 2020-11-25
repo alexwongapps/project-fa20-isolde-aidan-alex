@@ -23,5 +23,5 @@ When writing inputs/outputs:
 
 Our best happinesses: 
 - 10: 462.356
-- 20: 1743.448
+- 20: 1817.685
 - 50: 8707.883

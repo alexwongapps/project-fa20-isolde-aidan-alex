@@ -5,13 +5,27 @@ class BreakoutProblem(Annealer):
 
     def __init__(self, graph, stress_budget):
         self.graph = graph
-        self.state = Zoom(graph, graph.number_of_nodes())
+        self.state = Zoom(graph, graph.number_of_nodes(), stress_budget)
         self.stress_budget = stress_budget
 
 
     def move(self):
+        #dic = {}
+        """for i in range(len(self.state.rooms)):
+            dic[i] = self.state.rooms[i].students
+        if is_valid_solution(convert_dictionary(dic), self.graph, self.stress_budget, len(self.state.rooms)):
+           // self.state.move_random_student()
+        else:"""
+        #self.state.shuffle()
         self.state.move_random_student()
+        #self.state.move_from_least_strappiness()
+        
 
+
+        
+        #measure stress levels, if the highest avg stress is too large then take a random thing from that and place it in (random/(least stress/happiness score))
+        # -a*stress + b*happiness
+        # if the stress is too large then we give that a really big stress level -> stress budget 
 
     def energy(self):
         dic = {}
@@ -19,20 +33,25 @@ class BreakoutProblem(Annealer):
             dic[i] = self.state.rooms[i].students
         if is_valid_solution(convert_dictionary(dic), self.graph, self.stress_budget, len(self.state.rooms)):
             return -1 * calculate_happiness(convert_dictionary(dic), self.graph)
-        else:
+        else: # does not meet stress requirement
             return 1
-        
+            # return max(0, (-1 * self.state.stress_happiness_score()) / 100)
         
 
 class Zoom:
-    def __init__(self, graph, num_students, rooms=[]):
+    def __init__(self, graph, num_students, stress_budget, rooms=[]):
         self.rooms = rooms
         self.graph = graph
+        self.stress_budget = stress_budget
         self.num_students = num_students
-        self.add_all_students()
-        
+        self.add_random_students()
+
+    def shuffle(self):
+        self.rooms.clear()
+        self.add_random_students()
+
     def add_random_students(self):
-        lst = self.partition([i for i in range(self.num_students)], randint(1, self.num_students - 1))
+        lst = self.partition(sample([i for i in range(self.num_students)], self.num_students), randint(1, (self.num_students)/2))
         for element in lst:
             self.rooms.append(Room(self.graph, element.copy()))
 
@@ -42,10 +61,21 @@ class Zoom:
 
     def partition(self, lst, n):
         division = len(lst) / float(n)
-        return [ lst[int(round(division * i)): int(round(division * (i + 1)))] for i in range(n) ]
+        return [ lst[int(round(division * i)): int(round(division * (i + 1)))] for i in range(n)]
 
     def move_from_avg_least_happy(self):
         rand1, rand2 = self.two_heuristic_rooms() 
+        cur_r = self.rooms[rand1]
+        new_r = self.rooms[rand2]
+        ran_student = choice(cur_r.students)
+        cur_r.remove_student(ran_student)
+        new_r.add_student(ran_student)
+
+        if cur_r.num_students() == 0:
+            self.remove_room(rand1)
+
+    def move_from_least_strappiness(self):
+        rand1, rand2 = self.two_heuristic_strappiness_rooms() 
         cur_r = self.rooms[rand1]
         new_r = self.rooms[rand2]
         ran_student = choice(cur_r.students)
@@ -83,6 +113,22 @@ class Zoom:
         
         return index1, index2
             
+    def two_heuristic_strappiness_rooms(self):
+        room1 = min(self.rooms, key=(lambda k: k.stress_happiness_score()))
+        index1 = self.rooms.index(room1)
+        index2 = index1
+
+        while index1 == index2:
+            index2 = randint(0, self.num_rooms())
+            
+            if index2 >= self.num_rooms():
+                new_room = Room(self.graph, [])
+                self.rooms.append(new_room)
+                index2 = self.num_rooms() - 1
+            else:
+                new_room = self.rooms[index2]
+        
+        return index1, index2
 
 
     def two_random_rooms(self):
@@ -90,7 +136,7 @@ class Zoom:
         rand2 = 0
         while rand1 == rand2:
             rand1 = randint(0, self.num_rooms() - 1)
-            rand2 = randint(0, self.num_students - 1)
+            rand2 = randint(0, self.num_rooms())
             
             if rand2 >= self.num_rooms():
                 new_room = Room(self.graph, [])
@@ -106,6 +152,12 @@ class Zoom:
 
     def remove_room(self, index):
         del self.rooms[index]
+
+    def stress_happiness_score(self):
+        return sum([room.stress_happiness_score() for room in self.rooms])
+    
+    def stress_bound(self, stress_level):
+        return stress_level <= self.stress_budget/self.num_rooms()
         
     def __repr__(self):
         return str(self.rooms)
@@ -137,6 +189,11 @@ class Room:
     
     def average_happiness(self):
         return (calculate_happiness_for_room(self.students, self.graph))/(self.num_students())
+
+    def stress_happiness_score(self):
+        stress = -1 * STRESS_CONSTANT * calculate_stress_for_room(self.students, self.graph)
+        happiness = HAPPINESS_CONSTANT * calculate_happiness_for_room(self.students, self.graph)
+        return stress + happiness
     
     def __repr__(self):
         return str(self.students)

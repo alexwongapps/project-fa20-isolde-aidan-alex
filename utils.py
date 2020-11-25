@@ -1,5 +1,8 @@
 import networkx as nx
 
+STRESS_CONSTANT = 10
+HAPPINESS_CONSTANT = 1
+
 def is_valid_solution(D, G, s, rooms):
     """
     Checks whether D is a valid mapping of G, by checking every room adheres to the stress budget.
