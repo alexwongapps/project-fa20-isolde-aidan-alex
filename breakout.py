@@ -1,6 +1,36 @@
 from utils import *
 from simanneal import Annealer
 from random import *
+
+# greedy alg: for each number of rooms, place according to maximized happiness
+def greedy_happiness(graph, stress_budget):
+    size = graph.number_of_nodes()
+    students = [i for i in range(size)]
+    shuffle(students)
+    max_happiness = (None, -1)
+    for num_rooms in range(1, size + 1):
+        rooms = [[] for i in range(num_rooms)]
+        finish = True
+        for student in students:
+            to_place = (-1, -1)
+            for room in range(num_rooms):
+                to_gain = calculate_happiness_for_room(rooms[room] + [student], graph) - calculate_happiness_for_room(rooms[room], graph)
+                if to_gain > to_place[1] and calculate_stress_for_room(rooms[room] + [student], graph) <= stress_budget / num_rooms:
+                    to_place = (room, to_gain)
+            if to_place[0] > -1:
+                rooms[to_place[0]] += [student]
+            else:
+                finish = False
+                break
+        if finish:
+            dic = {}
+            for i in range(num_rooms):
+                dic[i] = rooms[i]
+            hap = calculate_happiness(convert_dictionary(dic), graph) 
+            if hap > max_happiness[1]:
+                max_happiness = (rooms, hap)
+    return max_happiness[0]
+
 class BreakoutProblem(Annealer):
 
     def __init__(self, graph, stress_budget):

@@ -14,6 +14,13 @@ def generate_dic(rooms):
             dic[student] = i
     return dic
 
+def generate_dic_from_lists(rooms):
+    dic = {}
+    for i in range(len(rooms)):
+        for student in rooms[i]:
+            dic[student] = i
+    return dic
+
 def solve(G, s):
     """
     Args:
@@ -23,11 +30,17 @@ def solve(G, s):
         D: Dictionary mapping for student to breakout room r e.g. {0:2, 1:0, 2:1, 3:2}
         k: Number of breakout rooms
     """
+    """
     problem = BreakoutProblem(G, s)
     zoom, happiness = problem.anneal()
     mapping = generate_dic(zoom.rooms)
     return mapping, len(zoom.rooms)
-
+    """
+    rooms = greedy_happiness(G, s)
+    if rooms is None:
+        return {}, -1
+    rooms = [r for r in rooms if len(r) != 0]
+    return generate_dic_from_lists(rooms), len(rooms)
 
 
 # Here's an example of how to run your solver.
@@ -46,11 +59,20 @@ if __name__ == '__main__':
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
-    inputs = glob.glob('inputs/small/*')
+    inputs = glob.glob('inputs/large/*')
+    couldnt = []
+    done = 0
     for input_path in inputs:
-        output_path = 'outputs/small/' + basename(normpath(input_path))[:-3] + '.out'
+        print("doing #" + str(done) + ": " + input_path)
+        done += 1
+        output_path = 'outputs/large/' + basename(normpath(input_path))[:-3] + '.out'
         G, s = read_input_file(input_path)
         D, k = solve(G, s)
-        assert is_valid_solution(D, G, s, k)
-        cost_t = calculate_happiness(D, G)
-        write_output_file(D, output_path)
+        if k != -1:
+            assert is_valid_solution(D, G, s, k)
+            cost_t = calculate_happiness(D, G)
+            write_output_file(D, output_path)
+            print("done, used " + str(k) + " rooms")
+        else:
+            couldnt += [input_path]
+    print(couldnt)

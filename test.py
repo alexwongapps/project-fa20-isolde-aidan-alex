@@ -2,12 +2,15 @@ from breakout import *
 from parse import *
 from utils import *
 
-G, stress_budget = read_input_file("in/50.in")
+G, stress_budget = read_input_file("in/50_1.in")
+print(greedy_happiness(G, stress_budget))
+"""
 problem = BreakoutProblem(G, stress_budget)
 problem.updates = 1000
 zoom, happiness = problem.anneal()
 print("\n")
 print(zoom.rooms, happiness)
+"""
 """
 def fun(lst):
     graph, stress_budget = read_input_file("in/50.in")
