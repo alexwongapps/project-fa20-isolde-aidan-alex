@@ -6,6 +6,8 @@ from breakout import *
 import glob
 from os.path import *
 import sys
+from os.path import basename, normpath
+import glob
 
 def generate_dic(rooms):
     dic = {}
