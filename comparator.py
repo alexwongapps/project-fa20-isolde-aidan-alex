@@ -23,9 +23,19 @@ if __name__ == '__main__':
         first_path = 'comp1/' + basename(normpath(input_path))[:-3] + '.out'
         second_path = 'comp2/' + basename(normpath(input_path))[:-3] + '.out'
         G, s = read_input_file(input_path)
-        D1, k1 = read_output_file(first_path, G, s)
-        D2, k2 = read_output_file(second_path, G, s)
-        h1 = calculate_happiness(D1, G)
-        h2 = calculate_happiness(D2, G)
-        if h1 < h2:
-            write_output_file(D2, output_path)
+        try:
+            D1 = read_output_file(first_path, G, s)
+            h1 = calculate_happiness(D1, G)
+        except:
+            h1 = 0
+        try: 
+            D2 = read_output_file(second_path, G, s)
+            h2 = calculate_happiness(D2, G)
+        except:
+            h2 = 0
+        if h1 + h2 > 0:
+            if h1 < h2:
+                write_output_file(D2, first_path)
+                print("chose comp2: " + str(h2) + " vs. " + str(h1))
+            else:
+                print("chose comp1: " + str(h1) + " vs. " + str(h2))

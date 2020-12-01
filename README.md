@@ -20,3 +20,6 @@ When writing inputs/outputs:
 - Make sure you use the functions `write_input_file` and `write_output_file` provided
 - Run the functions `read_input_file` and `read_output_file` to validate your files before submitting!
   - These are the functions run by the autograder to validate submissions
+
+Didn't work with sim anneal:
+- small-20, 25, 34, 44, 90, 109, 112, 123, 128, 143, 166, 174, 175, 188, 204, 221, 222
