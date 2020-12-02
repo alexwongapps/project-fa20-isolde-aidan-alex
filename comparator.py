@@ -7,7 +7,7 @@ import glob
 from os.path import *
 import sys
 from os.path import basename, normpath
-from solversmall import *
+from solver import *
 
 # Given two sets of outputs, writes the output of the best happiness to the first file for each input
 # Requires a folder "inputs" with the input files, and two folders "comp1" and "comp2" with the two output sets to compare
