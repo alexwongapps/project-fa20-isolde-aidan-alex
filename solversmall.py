@@ -32,6 +32,7 @@ def solve(G, s):
         D: Dictionary mapping for student to breakout room r e.g. {0:2, 1:0, 2:1, 3:2}
         k: Number of breakout rooms
     """
+    """
     problem = BreakoutProblem(G, s)
     zoom, happiness = problem.anneal()
     mapping = generate_dic(zoom.rooms)
@@ -42,7 +43,7 @@ def solve(G, s):
         return {}, -1
     rooms = [r for r in rooms if len(r) != 0]
     return generate_dic_from_lists(rooms), len(rooms)
-    """
+    
 
 
 # Here's an example of how to run your solver.
@@ -60,14 +61,13 @@ if __name__ == '__main__':
 """
 
 def main():
-    """
-    inputs = glob.glob('inputs/testing/*')
+    inputs = glob.glob('compinputs/*')
     couldnt = []
     done = 0
     for input_path in inputs:
-        print("doing #" + str(done) + ": " + input_path)
         done += 1
-        output_path = 'outputs/testing/' + basename(normpath(input_path))[:-3] + '.out'
+        print("doing #" + str(done) + ": " + input_path)
+        output_path = 'comp2/' + basename(normpath(input_path))[:-3] + '.out'
         G, s = read_input_file(input_path)
         D, k = solve(G, s)
         if k != -1:
@@ -89,6 +89,7 @@ def main():
         assert is_valid_solution(D, G, s, k)
         write_output_file(D, output_path)
         print("done, used " + str(k) + " rooms")
+    """
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
