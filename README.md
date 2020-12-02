@@ -22,4 +22,4 @@ When writing inputs/outputs:
   - These are the functions run by the autograder to validate submissions
 
 Didn't work with sim anneal:
-- small-20, 25, 34, 44, 90, 109, 112, 123, 128, 143, 166, 174, 175, 188, 204, 221, 222
+- add_random: small-20, 25, 34, 44, 90, 109, 112, 123, 128, 143, 166, 174, 175, 188, 204, 221, 222

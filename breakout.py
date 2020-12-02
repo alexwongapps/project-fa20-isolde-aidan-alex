@@ -74,7 +74,7 @@ class Zoom:
         self.graph = graph
         self.stress_budget = stress_budget
         self.num_students = num_students
-        self.add_random_students()
+        self.add_all_students()
 
     def shuffle(self):
         self.rooms.clear()
