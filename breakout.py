@@ -1,16 +1,21 @@
 from utils import *
 from simanneal import Annealer
 from random import *
+from parse import *
 
-# greedy alg: for each number of rooms, place according to maximized happiness
 def greedy_happiness(graph, stress_budget):
     size = graph.number_of_nodes()
     students = [i for i in range(size)]
     shuffle(students)
+    original_students = students.copy()
     max_happiness = (None, -1)
     for num_rooms in range(1, size + 1):
         rooms = [[] for i in range(num_rooms)]
         finish = True
+        students = original_students.copy()
+        # add first num_rooms students, one per room
+        for i in range(num_rooms):
+            rooms[i].append(students.pop(0))
         for student in students:
             to_place = (-1, -1)
             for room in range(num_rooms):
@@ -22,6 +27,46 @@ def greedy_happiness(graph, stress_budget):
             else:
                 finish = False
                 break
+        if finish:
+            dic = {}
+            for i in range(num_rooms):
+                dic[i] = rooms[i]
+            hap = calculate_happiness(convert_dictionary(dic), graph) 
+            if hap > max_happiness[1]:
+                max_happiness = (rooms, hap)
+    return max_happiness[0]
+
+# greedy alg, half random
+def greedy_happiness_half_random(graph, stress_budget):
+    size = graph.number_of_nodes()
+    students = [i for i in range(size)]
+    shuffle(students)
+    max_happiness = (None, -1)
+    for num_rooms in range(1, size + 1):
+        rooms = [[] for i in range(num_rooms)]
+        finish = True
+
+        i = 0
+
+        for student in students:
+            to_place = (-1, -1)
+            can_place = []
+            for room in range(num_rooms):
+                to_gain = calculate_happiness_for_room(rooms[room] + [student], graph) - calculate_happiness_for_room(rooms[room], graph)
+                if calculate_stress_for_room(rooms[room] + [student], graph) <= stress_budget / num_rooms:
+                    if to_gain > to_place[1]:
+                        to_place = (room, to_gain)
+                    can_place.append(room)
+            if to_place[0] > -1:
+                if i % 2 == 0:
+                    rooms[to_place[0]] += [student]
+                else:
+                    rooms[choice(can_place)] += [student]
+            else:
+                finish = False
+                break
+            i += 1
+
         if finish:
             dic = {}
             for i in range(num_rooms):
@@ -75,6 +120,7 @@ class Zoom:
         self.stress_budget = stress_budget
         self.num_students = num_students
         self.add_all_students()
+        # self.add_current_sol("outputs/medium-1.out")
 
     def shuffle(self):
         self.rooms.clear()
@@ -88,6 +134,21 @@ class Zoom:
     def add_all_students(self):
         for i in range(self.num_students):
             self.rooms.append(Room(self.graph, [i]))
+
+    def add_greedily(self):
+        rooms = greedy_happiness(self.graph, self.stress_budget)
+        for room in rooms:
+            if len(room) > 0:
+                self.rooms.append(Room(self.graph, room))
+
+    def add_current_sol(self, path):
+        dic = read_output_file(path, self.graph, self.stress_budget)
+        rooms = [[] for i in range(self.num_students)]
+        for i in range(len(dic)):
+            rooms[dic[i]].append(i)
+        for room in rooms:
+            if len(room) > 0:
+                self.rooms.append(Room(self.graph, room))
 
     def partition(self, lst, n):
         division = len(lst) / float(n)

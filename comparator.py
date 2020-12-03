@@ -35,12 +35,12 @@ if __name__ == '__main__':
             h2 = 0
         if h1 + h2 > 0:
             done += 1
-            print("doing #" + str(done) + ": " + input_path)
+            # print("doing #" + str(done) + ": " + input_path)
             if h1 < h2:
                 write_output_file(D2, first_path)
-                print("chose comp2: " + str(h2) + " vs. " + str(h1))
+                # print("chose comp2: " + str(h2) + " vs. " + str(h1))
                 changed += 1
             else:
-                print("chose comp1: " + str(h1) + " vs. " + str(h2))
+                # print("chose comp1: " + str(h1) + " vs. " + str(h2))
                 kept += 1
     print("changed " + str(changed) + ", kept " + str(kept))

@@ -66,6 +66,14 @@ def main():
     done = 0
     for input_path in inputs:
         done += 1
+        """
+        if done == 60:
+            print("25%")
+        elif done == 120:
+            print("50%")
+        elif done == 180:
+            print("75%")
+        """
         print("doing #" + str(done) + ": " + input_path)
         output_path = 'comp2/' + basename(normpath(input_path))[:-3] + '.out'
         G, s = read_input_file(input_path)
@@ -74,10 +82,10 @@ def main():
             assert is_valid_solution(D, G, s, k)
             cost_t = calculate_happiness(D, G)
             write_output_file(D, output_path)
-            print("done, used " + str(k) + " rooms")
+            # print("done, used " + str(k) + " rooms")
         else:
             couldnt += [input_path]
-    print(couldnt)
+    # print(couldnt)
     """
     num = sys.argv[1]
     print("Doing #" + str(num))

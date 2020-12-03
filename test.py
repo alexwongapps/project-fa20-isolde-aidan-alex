@@ -2,15 +2,19 @@ from breakout import *
 from parse import *
 from utils import *
 
-G, stress_budget = read_input_file("in/50_1.in")
-print(greedy_happiness(G, stress_budget))
-"""
+def generate_dic_from_lists(rooms):
+    dic = {}
+    for i in range(len(rooms)):
+        for student in rooms[i]:
+            dic[student] = i
+    return dic
+
+G, stress_budget = read_input_file("inputs/medium-1.in")
 problem = BreakoutProblem(G, stress_budget)
-problem.updates = 1000
+problem.updates = 100
 zoom, happiness = problem.anneal()
-print("\n")
-print(zoom.rooms, happiness)
-"""
+print(happiness)
+
 """
 def fun(lst):
     graph, stress_budget = read_input_file("in/50.in")
