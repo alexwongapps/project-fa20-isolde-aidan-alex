@@ -2,6 +2,68 @@ from utils import *
 from simanneal import Annealer
 from random import *
 from parse import *
+import time
+
+def true_random(graph, stress_budget, start_greedy_at=None):
+    size = graph.number_of_nodes()
+    if start_greedy_at is None:
+        start_greedy_at = size
+    students = [i for i in range(size)]
+    #origorig = students.copy()
+    max_happiness = (None, -1)
+    start_time = int(time.time())
+    iters = 0
+    while int(time.time()) - start_time < 10:
+        iters += 1
+        #orig = origorig.copy()
+        #shuffle(orig)
+        shuffle(students)
+        for num_rooms in range(1, size + 1):
+            #students = orig.copy()
+            rooms = [[] for i in range(num_rooms)]
+            #for i in range(num_rooms):
+            #    rooms[i].append(students.pop(0))
+            good = True
+            for i in range(start_greedy_at):
+                student = students[i]
+                valid = False
+                to_try = [i for i in range(num_rooms)]
+                try_this = -1
+                while not valid and len(to_try) > 0:
+                    try_this = choice(to_try)
+                    if calculate_stress_for_room(rooms[try_this] + [student], graph) <= stress_budget / num_rooms:
+                        valid = True
+                    to_try.remove(try_this)
+                if valid:
+                    rooms[try_this] += [student]
+                else:
+                    good = False
+                    break
+            for i in range(start_greedy_at, size):
+                student = students[i]
+                to_place = (-1, -1)
+                for room in range(num_rooms):
+                    to_gain = calculate_happiness_for_room(rooms[room] + [student], graph) - calculate_happiness_for_room(rooms[room], graph)
+                    if to_gain > to_place[1] and calculate_stress_for_room(rooms[room] + [student], graph) <= stress_budget / num_rooms:
+                        to_place = (room, to_gain)
+                if to_place[0] > -1:
+                    rooms[to_place[0]] += [student]
+                else:
+                    good = False
+                    break
+            if good:
+                rooms = [room for room in rooms if len(room) > 0]
+                dic = {}
+                for i in range(len(rooms)):
+                    dic[i] = rooms[i]
+                if is_valid_solution(convert_dictionary(dic), graph, stress_budget, len(rooms)):
+                    hap = calculate_happiness(convert_dictionary(dic), graph) 
+                    if hap > max_happiness[1]:
+                        max_happiness = (rooms, hap)
+    print("iterations: " + str(iters))
+    return max_happiness[0] if max_happiness[0] is not None else [[i] for i in range(size)]
+
+
 
 def greedy_happiness(graph, stress_budget):
     size = graph.number_of_nodes()
@@ -109,8 +171,8 @@ class BreakoutProblem(Annealer):
         if is_valid_solution(convert_dictionary(dic), self.graph, self.stress_budget, len(self.state.rooms)):
             return -1 * calculate_happiness(convert_dictionary(dic), self.graph)
         else: # does not meet stress requirement
-            return 1
-            # return max(0, (-1 * self.state.stress_happiness_score()) / 100)
+            # return 1
+            return max(0, (-1 * self.state.stress_happiness_score()) / 100)
         
 
 class Zoom:
@@ -120,7 +182,8 @@ class Zoom:
         self.stress_budget = stress_budget
         self.num_students = num_students
         self.add_all_students()
-        # self.add_current_sol("outputs/medium-1.out")
+        #self.add_random_students()
+        #self.add_current_sol("outputs/small-65.out")
 
     def shuffle(self):
         self.rooms.clear()
@@ -284,7 +347,7 @@ class Room:
     def stress_happiness_score(self):
         stress = -1 * STRESS_CONSTANT * calculate_stress_for_room(self.students, self.graph)
         happiness = HAPPINESS_CONSTANT * calculate_happiness_for_room(self.students, self.graph)
-        return stress + happiness
+        return stress + happiness + ADD_CONSTANT
     
     def __repr__(self):
         return str(self.students)

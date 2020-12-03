@@ -9,12 +9,14 @@ def generate_dic_from_lists(rooms):
             dic[student] = i
     return dic
 
-G, stress_budget = read_input_file("inputs/medium-1.in")
+G, stress_budget = read_input_file("inputs/medium-3.in")
+print(true_random(G, stress_budget))
+"""
 problem = BreakoutProblem(G, stress_budget)
 problem.updates = 100
 zoom, happiness = problem.anneal()
-print(happiness)
-
+print(zoom.rooms, happiness)
+"""
 """
 def fun(lst):
     graph, stress_budget = read_input_file("in/50.in")

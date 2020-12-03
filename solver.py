@@ -38,7 +38,8 @@ def solve(G, s):
     mapping = generate_dic(zoom.rooms)
     return mapping, len(zoom.rooms)
     """
-    rooms = greedy_happiness(G, s)
+    # rooms = greedy_happiness(G, s)
+    rooms = true_random(G, s, start_greedy_at=40)
     if rooms is None:
         return {}, -1
     rooms = [r for r in rooms if len(r) != 0]
@@ -61,21 +62,14 @@ if __name__ == '__main__':
 """
 
 def main():
-    inputs = glob.glob('compinputs/*')
+    inputs = glob.glob('compinputslarge/*')
     couldnt = []
     done = 0
-    for input_path in inputs:
+    for i in range(36):
+        input_path = inputs[i]
         done += 1
-        """
-        if done == 60:
-            print("25%")
-        elif done == 120:
-            print("50%")
-        elif done == 180:
-            print("75%")
-        """
         print("doing #" + str(done) + ": " + input_path)
-        output_path = 'comp2/' + basename(normpath(input_path))[:-3] + '.out'
+        output_path = 'comp2large/' + basename(normpath(input_path))[:-3] + '.out'
         G, s = read_input_file(input_path)
         D, k = solve(G, s)
         if k != -1:

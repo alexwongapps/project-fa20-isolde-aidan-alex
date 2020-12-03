@@ -15,13 +15,14 @@ from solver import *
 # The folders should have the same files (e.g. for file small-1, there should be inputs/small-1.in, comp1/small-1.out, comp2/small-1.out)
 # Since this will overwrite the outputs in "comp1", you should make sure those are backed up (push them to Git or something)
 if __name__ == '__main__':
-    inputs = glob.glob('compinputs/*')
+    inputs = glob.glob('compinputslarge/*')
     done = 0
     changed = 0
     kept = 0
+    improvement = 0
     for input_path in inputs:
-        first_path = 'comp1/' + basename(normpath(input_path))[:-3] + '.out'
-        second_path = 'comp2/' + basename(normpath(input_path))[:-3] + '.out'
+        first_path = 'comp1large/' + basename(normpath(input_path))[:-3] + '.out'
+        second_path = 'comp2large/' + basename(normpath(input_path))[:-3] + '.out'
         G, s = read_input_file(input_path)
         try:
             D1 = read_output_file(first_path, G, s)
@@ -40,7 +41,9 @@ if __name__ == '__main__':
                 write_output_file(D2, first_path)
                 # print("chose comp2: " + str(h2) + " vs. " + str(h1))
                 changed += 1
+                improvement += (h2 - h1) / h1
             else:
                 # print("chose comp1: " + str(h1) + " vs. " + str(h2))
                 kept += 1
     print("changed " + str(changed) + ", kept " + str(kept))
+    print("average improvement: " + (str(0) if changed == 0 else (str(round(improvement / changed * 100, 1)) + "%")))
