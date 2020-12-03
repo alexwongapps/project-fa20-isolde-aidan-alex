@@ -9,7 +9,7 @@ def generate_dic_from_lists(rooms):
             dic[student] = i
     return dic
 
-G, stress_budget = read_input_file("inputs/medium-3.in")
+G, stress_budget = read_input_file("inputs/small-65.in")
 print(true_random(G, stress_budget))
 """
 problem = BreakoutProblem(G, stress_budget)

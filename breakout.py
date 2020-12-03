@@ -60,7 +60,7 @@ def true_random(graph, stress_budget, start_greedy_at=None):
                     hap = calculate_happiness(convert_dictionary(dic), graph) 
                     if hap > max_happiness[1]:
                         max_happiness = (rooms, hap)
-    print("iterations: " + str(iters))
+    print(max_happiness)
     return max_happiness[0] if max_happiness[0] is not None else [[i] for i in range(size)]
 
 
