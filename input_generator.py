@@ -63,6 +63,6 @@ def generate_lst(s):
             
 
 #print(generate_input(generate_lst(10)))
-print(generate_output([[16, 18, 3], [19, 11, 10, 7], [0, 9, 6, 4], [17, 1, 8], [2, 15, 14], [5, 13, 12]]))
+print(generate_output([[13, 8, 2, 6], [9, 5, 1, 0], [4, 11, 18, 14], [12, 17, 16, 15], [7, 10, 3, 19]]))
 
 

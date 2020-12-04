@@ -140,9 +140,9 @@ def greedy_happiness_half_random(graph, stress_budget):
 
 class BreakoutProblem(Annealer):
 
-    def __init__(self, graph, stress_budget):
+    def __init__(self, graph, stress_budget, load=None):
         self.graph = graph
-        self.state = Zoom(graph, graph.number_of_nodes(), stress_budget)
+        self.state = Zoom(graph, graph.number_of_nodes(), stress_budget, load=load)
         self.stress_budget = stress_budget
 
 
@@ -153,8 +153,12 @@ class BreakoutProblem(Annealer):
         if is_valid_solution(convert_dictionary(dic), self.graph, self.stress_budget, len(self.state.rooms)):
            // self.state.move_random_student()
         else:"""
+        if random() < 0.9:
+            self.state.swap_students()
+        else:
+            self.state.move_random_student()
         #self.state.shuffle()
-        self.state.move_random_student()
+        # self.state.move_random_student()
         #self.state.move_from_least_strappiness()
         
 
@@ -176,14 +180,15 @@ class BreakoutProblem(Annealer):
         
 
 class Zoom:
-    def __init__(self, graph, num_students, stress_budget, rooms=[]):
+    def __init__(self, graph, num_students, stress_budget, rooms=[], load=None):
         self.rooms = rooms
         self.graph = graph
         self.stress_budget = stress_budget
         self.num_students = num_students
-        self.add_all_students()
+
+        #self.add_all_students()
         #self.add_random_students()
-        #self.add_current_sol("outputs/small-65.out")
+        self.add_current_sol(load)
 
     def shuffle(self):
         self.rooms.clear()
@@ -250,6 +255,21 @@ class Zoom:
         if cur_r.num_students() == 0:
             self.remove_room(rand1)
 
+    def swap_students(self):
+        if len(self.rooms) == 1:
+            self.move_random_student()
+            return
+        rand1, rand2 = self.two_random_rooms(include_new=False)
+        cur_r = self.rooms[rand1]
+        new_r = self.rooms[rand2]
+        ran_student_1 = choice(cur_r.students)
+        ran_student_2 = choice(new_r.students)
+        cur_r.remove_student(ran_student_1)
+        new_r.add_student(ran_student_1)
+        new_r.remove_student(ran_student_2)
+        cur_r.add_student(ran_student_2)
+
+
     def two_heuristic_rooms(self):
         room1 = min(self.rooms, key=lambda r: r.average_happiness())
         index1 = self.rooms.index(room1)
@@ -285,12 +305,12 @@ class Zoom:
         return index1, index2
 
 
-    def two_random_rooms(self):
+    def two_random_rooms(self, include_new=True):
         rand1 = 0
         rand2 = 0
         while rand1 == rand2:
             rand1 = randint(0, self.num_rooms() - 1)
-            rand2 = randint(0, self.num_rooms())
+            rand2 = randint(0, self.num_rooms() if include_new else self.num_rooms() - 1)
             
             if rand2 >= self.num_rooms():
                 new_room = Room(self.graph, [])

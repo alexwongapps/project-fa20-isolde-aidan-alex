@@ -2,7 +2,7 @@ import networkx as nx
 
 STRESS_CONSTANT = 1
 HAPPINESS_CONSTANT = 1
-ADD_CONSTANT = -1000
+ADD_CONSTANT = -5000
 
 def is_valid_solution(D, G, s, rooms):
     """
