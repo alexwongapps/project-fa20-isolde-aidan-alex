@@ -15,14 +15,14 @@ from solver import *
 # The folders should have the same files (e.g. for file small-1, there should be inputs/small-1.in, comp1/small-1.out, comp2/small-1.out)
 # Since this will overwrite the outputs in "comp1", you should make sure those are backed up (push them to Git or something)
 if __name__ == '__main__':
-    inputs = glob.glob('compinputsmed/*')
+    inputs = glob.glob('compinputslarge/*')
     done = 0
     changed = 0
     kept = 0
     improvement = 0
     for input_path in inputs:
-        first_path = 'comp1med/' + basename(normpath(input_path))[:-3] + '.out'
-        second_path = 'comp2med/' + basename(normpath(input_path))[:-3] + '.out'
+        first_path = 'comp1large/' + basename(normpath(input_path))[:-3] + '.out'
+        second_path = 'comp2large/' + basename(normpath(input_path))[:-3] + '.out'
         G, s = read_input_file(input_path)
         try:
             D1 = read_output_file(first_path, G, s)
