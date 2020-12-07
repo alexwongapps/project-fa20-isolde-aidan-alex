@@ -4,6 +4,77 @@ from random import *
 from parse import *
 import time
 
+def check_moves(graph, stress_budget, load=None, rs=None):
+    if load is not None:
+        dic = read_output_file(load, graph, stress_budget)
+        cur_happiness = calculate_happiness(dic, graph)
+        rooms = [[] for i in range(graph.number_of_nodes())]
+        for i in range(len(dic)):
+            rooms[dic[i]].append(i)
+        rooms = [room for room in rooms if len(room) > 0]
+    else:
+        rooms = rs.copy()
+        dic3 = {}
+        for k in range(len(rooms)):
+            dic3[k] = rooms[k]
+        cur_happiness = calculate_happiness(convert_dictionary(dic3), graph)
+
+    for i in range(len(rooms)):
+        for s1 in rooms[i].copy():
+            rooms[i].remove(s1)
+            for j in range(len(rooms)):
+                if i != j:
+                    rooms[j].append(s1)
+                    dic2 = {}
+                    for k in range(len(rooms)):
+                        dic2[k] = rooms[k]
+                    if is_valid_solution(convert_dictionary(dic2), graph, stress_budget, len(rooms)):
+                        hap = calculate_happiness(convert_dictionary(dic2), graph) 
+                        if hap > cur_happiness:
+                            return rooms
+                    rooms[j].remove(s1)
+            rooms[i].append(s1)
+    return None
+
+
+def check_switches(graph, stress_budget, load=None, rs=None):
+    if load is not None:
+        dic = read_output_file(load, graph, stress_budget)
+        cur_happiness = calculate_happiness(dic, graph)
+        rooms = [[] for i in range(graph.number_of_nodes())]
+        for i in range(len(dic)):
+            rooms[dic[i]].append(i)
+        rooms = [room for room in rooms if len(room) > 0]
+    else:
+        rooms = rs.copy()
+        dic3 = {}
+        for k in range(len(rooms)):
+            dic3[k] = rooms[k]
+        cur_happiness = calculate_happiness(convert_dictionary(dic3), graph)
+    for i in range(len(rooms)):
+        for s1 in rooms[i]:
+            rooms[i].remove(s1)
+            for j in range(i + 1, len(rooms)):
+                for s2 in rooms[j]:
+                    rooms[j].append(s1)
+                    rooms[j].remove(s2)
+                    rooms[i].append(s2)
+                    dic2 = {}
+                    for k in range(len(rooms)):
+                        dic2[k] = rooms[k]
+                    if is_valid_solution(convert_dictionary(dic2), graph, stress_budget, len(rooms)):
+                        hap = calculate_happiness(convert_dictionary(dic2), graph) 
+                        if hap > cur_happiness:
+                            return rooms
+                    rooms[i].remove(s2)
+                    rooms[j].append(s2)
+                    rooms[j].remove(s1)
+            rooms[i].append(s1)
+    return None
+
+
+
+
 def true_random(graph, stress_budget, start_greedy_at=None):
     size = graph.number_of_nodes()
     if start_greedy_at is None:
@@ -156,7 +227,7 @@ class BreakoutProblem(Annealer):
         if is_valid_solution(convert_dictionary(dic), self.graph, self.stress_budget, len(self.state.rooms)):
            // self.state.move_random_student()
         else:"""
-        if random() < 0.9:
+        if random() < 0.25:
             self.state.swap_students()
         else:
             self.state.move_random_student()
@@ -178,8 +249,8 @@ class BreakoutProblem(Annealer):
         if is_valid_solution(convert_dictionary(dic), self.graph, self.stress_budget, len(self.state.rooms)):
             return -1 * calculate_happiness(convert_dictionary(dic), self.graph)
         else: # does not meet stress requirement
-            # return 1
-            return max(0, (-1 * self.state.stress_happiness_score()) / 100)
+            return 1
+            #return max(0, (-1 * self.state.stress_happiness_score()) / 100)
         
 
 class Zoom:

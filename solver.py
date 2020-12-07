@@ -32,6 +32,7 @@ def solve(G, s, load=None):
         D: Dictionary mapping for student to breakout room r e.g. {0:2, 1:0, 2:1, 3:2}
         k: Number of breakout rooms
     """
+    """
     current_bunch = []
     for i in range(10):
         problem = BreakoutProblem(G, s, load=load)
@@ -54,7 +55,17 @@ def solve(G, s, load=None):
     mapping = generate_dic(zoom.rooms)
     return mapping, len(zoom.rooms)
     """
-    
+    """
+    problem = BreakoutProblem(G, s, load=load)
+    problem.steps = 100000
+    problem.updates = 100
+    problem.Tmax = 100000.0
+    problem.Tmin = 10.0
+    zoom, happiness = problem.anneal()
+    mapping = generate_dic(zoom.rooms)
+    return mapping, len(zoom.rooms)
+    """
+    """
     # rooms = greedy_happiness(G, s)
     rooms = true_random(G, s)
     if rooms is None:
@@ -63,8 +74,30 @@ def solve(G, s, load=None):
     return generate_dic_from_lists(rooms), len(rooms)
     """
     
+    """
+    r = check_switches(G, s, load=load)
+    if r is not None:
+        last = r.copy()
+    else:
+        return {}, -1
+    while r is not None:
+        r = check_switches(G, s, rs=r)
+        if r is not None:
+            last = r.copy()
+    return generate_dic_from_lists(last), len(last)
+    """
+    r = check_moves(G, s, load=load)
+    if r is not None:
+        last = r.copy()
+    else:
+        return {}, -1
+    while r is not None:
+        r = check_moves(G, s, rs=r)
+        if r is not None:
+            last = r.copy()
+    return generate_dic_from_lists(last), len(last)
     
-
+    
 
 # Here's an example of how to run your solver.
 
@@ -81,7 +114,8 @@ if __name__ == '__main__':
 """
 
 def main():
-    already_done = [1, 2, 6, 7, 9, 12, 14, 16, 18, 26, 33, 38, 39, 43, 46, 51, 53, 54, 56, 59, 60, 63, 64, 70, 73, 74, 77, 81, 84, 88, 89, 100, 103, 105, 111, 112, 114, 122, 123, 128, 132, 140, 143, 145, 147, 151, 157, 160, 161, 166, 169, 175, 178, 184, 187, 201, 202, 203, 206, 207, 208, 209, 213, 217, 218, 220, 222, 226, 227, 230, 233, 235]
+    # already_done = [1, 2, 6, 7, 9, 12, 14, 15, 16, 18, 26, 33, 34, 38, 39, 43, 46, 51, 52, 53, 54, 55, 56, 59, 60, 63, 64, 70, 73, 74, 77, 81, 84, 88, 89, 90, 100, 101, 103, 105, 109, 111, 112, 114, 115, 117, 119, 122, 123, 125, 128, 131, 132, 134, 140, 143, 145, 147, 151, 152, 157, 160, 161, 166, 167, 169, 174, 175, 178, 184, 187, 201, 202, 203, 206, 207, 208, 209, 213, 216, 217, 218, 220, 222, 226, 227, 230, 233, 235, 237, 241]
+    already_done = [7, 18, 33, 43, 51, 54, 56, 65, 69, 73, 77, 81, 91, 112, 114, 121, 123, 127, 131, 134, 151, 169, 171, 174, 178, 184, 187, 201, 202, 207, 213, 215, 222]
     """
     inputs = glob.glob('compinputslarge/*')
     couldnt = []
@@ -105,9 +139,9 @@ def main():
     num = int(sys.argv[1])
     print("Doing #" + str(num))
     if num not in already_done:
-        input_path = "compinputsmed/medium-" + str(num) + ".in"
-        current_sol_path = "comp1med/medium-" + str(num) + ".out"
-        output_path = "comp2med/medium-" + str(num) + ".out"
+        input_path = "compinputslarge/large-" + str(num) + ".in"
+        current_sol_path = "comp1large/large-" + str(num) + ".out"
+        output_path = "comp2large/large-" + str(num) + ".out"
         G, s = read_input_file(input_path)
         D, k = solve(G, s, load=current_sol_path)
         if k != -1:
@@ -116,7 +150,6 @@ def main():
             print("done, used " + str(k) + " rooms, happiness " + str(calculate_happiness(D, G)))
     else:
         print("Already done")
-    s
     
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
