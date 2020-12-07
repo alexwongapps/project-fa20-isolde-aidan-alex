@@ -23,7 +23,7 @@ def generate_dic_from_lists(rooms):
             dic[student] = i
     return dic
 
-def solve(G, s, load=None):
+def solve(G, s, load=None, moves=1):
     """
     Args:
         G: networkx.Graph
@@ -73,29 +73,28 @@ def solve(G, s, load=None):
     rooms = [r for r in rooms if len(r) != 0]
     return generate_dic_from_lists(rooms), len(rooms)
     """
-    
-    """
-    r = check_switches(G, s, load=load)
-    if r is not None:
-        last = r.copy()
-    else:
-        return {}, -1
-    while r is not None:
-        r = check_switches(G, s, rs=r)
+    if moves == 0:
+        r = check_switches(G, s, load=load)
         if r is not None:
             last = r.copy()
-    return generate_dic_from_lists(last), len(last)
-    """
-    r = check_moves(G, s, load=load)
-    if r is not None:
-        last = r.copy()
+        else:
+            return {}, -1
+        while r is not None:
+            r = check_switches(G, s, rs=r)
+            if r is not None:
+                last = r.copy()
+        return generate_dic_from_lists(last), len(last)
     else:
-        return {}, -1
-    while r is not None:
-        r = check_moves(G, s, rs=r)
+        r = check_moves(G, s, load=load)
         if r is not None:
             last = r.copy()
-    return generate_dic_from_lists(last), len(last)
+        else:
+            return {}, -1
+        while r is not None:
+            r = check_moves(G, s, rs=r)
+            if r is not None:
+                last = r.copy()
+        return generate_dic_from_lists(last), len(last)
     
     
 
@@ -115,7 +114,7 @@ if __name__ == '__main__':
 
 def main():
     # already_done = [1, 2, 6, 7, 9, 12, 14, 15, 16, 18, 26, 33, 34, 38, 39, 43, 46, 51, 52, 53, 54, 55, 56, 59, 60, 63, 64, 70, 73, 74, 77, 81, 84, 88, 89, 90, 100, 101, 103, 105, 109, 111, 112, 114, 115, 117, 119, 122, 123, 125, 128, 131, 132, 134, 140, 143, 145, 147, 151, 152, 157, 160, 161, 166, 167, 169, 174, 175, 178, 184, 187, 201, 202, 203, 206, 207, 208, 209, 213, 216, 217, 218, 220, 222, 226, 227, 230, 233, 235, 237, 241]
-    already_done = [7, 18, 33, 43, 51, 54, 56, 65, 69, 73, 77, 81, 91, 112, 114, 121, 123, 127, 131, 134, 151, 169, 171, 174, 178, 184, 187, 201, 202, 207, 213, 215, 222]
+    already_done = [7, 10, 14, 18, 33, 34, 38, 43, 47, 50, 51, 54, 56, 65, 69, 73, 76, 77, 81, 88, 90, 91, 112, 114, 121, 123, 127, 128, 131, 134, 145, 151, 157, 161, 169, 171, 174, 175, 178, 184, 187, 201, 202, 207, 213, 215, 222]
     """
     inputs = glob.glob('compinputslarge/*')
     couldnt = []
@@ -137,13 +136,14 @@ def main():
     
     """
     num = int(sys.argv[1])
+    moves = int(sys.argv[2])
     print("Doing #" + str(num))
     if num not in already_done:
         input_path = "compinputslarge/large-" + str(num) + ".in"
         current_sol_path = "comp1large/large-" + str(num) + ".out"
         output_path = "comp2large/large-" + str(num) + ".out"
         G, s = read_input_file(input_path)
-        D, k = solve(G, s, load=current_sol_path)
+        D, k = solve(G, s, load=current_sol_path, moves=moves)
         if k != -1:
             assert is_valid_solution(D, G, s, k)
             write_output_file(D, output_path)

@@ -19,6 +19,8 @@ def check_moves(graph, stress_budget, load=None, rs=None):
             dic3[k] = rooms[k]
         cur_happiness = calculate_happiness(convert_dictionary(dic3), graph)
 
+    best = None
+
     for i in range(len(rooms)):
         for s1 in rooms[i].copy():
             rooms[i].remove(s1)
@@ -31,10 +33,11 @@ def check_moves(graph, stress_budget, load=None, rs=None):
                     if is_valid_solution(convert_dictionary(dic2), graph, stress_budget, len(rooms)):
                         hap = calculate_happiness(convert_dictionary(dic2), graph) 
                         if hap > cur_happiness:
-                            return rooms
+                            best = ([row[:] for row in rooms], hap)
+                            cur_happiness = hap
                     rooms[j].remove(s1)
             rooms[i].append(s1)
-    return None
+    return best[0] if best is not None else None
 
 
 def check_switches(graph, stress_budget, load=None, rs=None):
@@ -51,6 +54,9 @@ def check_switches(graph, stress_budget, load=None, rs=None):
         for k in range(len(rooms)):
             dic3[k] = rooms[k]
         cur_happiness = calculate_happiness(convert_dictionary(dic3), graph)
+
+    best = None
+
     for i in range(len(rooms)):
         for s1 in rooms[i]:
             rooms[i].remove(s1)
@@ -65,12 +71,13 @@ def check_switches(graph, stress_budget, load=None, rs=None):
                     if is_valid_solution(convert_dictionary(dic2), graph, stress_budget, len(rooms)):
                         hap = calculate_happiness(convert_dictionary(dic2), graph) 
                         if hap > cur_happiness:
-                            return rooms
+                            best = ([row[:] for row in rooms], hap)
+                            cur_happiness = hap
                     rooms[i].remove(s2)
                     rooms[j].append(s2)
                     rooms[j].remove(s1)
             rooms[i].append(s1)
-    return None
+    return best[0] if best is not None else None
 
 
 
@@ -84,7 +91,7 @@ def true_random(graph, stress_budget, start_greedy_at=None):
     max_happiness = (None, -1)
     start_time = int(time.time())
     iters = 0
-    while int(time.time()) - start_time < 10:
+    while int(time.time()) - start_time < 225:
         iters += 1
         #orig = origorig.copy()
         #shuffle(orig)
