@@ -139,9 +139,13 @@ def greedy_happiness_half_random(graph, stress_budget):
 
 class BreakoutProblem(Annealer):
 
-    def __init__(self, graph, stress_budget, load=None):
+    def __init__(self, graph, stress_budget, rooms=None, load=None):
         self.graph = graph
-        self.state = Zoom(graph, graph.number_of_nodes(), stress_budget, load=load)
+        if rooms is not None:
+            self.state = Zoom(graph, graph.number_of_nodes(), stress_budget, rooms=rooms, load=load)
+        else:
+            self.state = Zoom(graph, graph.number_of_nodes(), stress_budget, load=load)
+
         self.stress_budget = stress_budget
 
 
@@ -187,7 +191,8 @@ class Zoom:
 
         #self.add_all_students()
         #self.add_random_students()
-        self.add_current_sol(load)
+        if load is not None:
+            self.add_current_sol(load)
 
     def shuffle(self):
         self.rooms.clear()
