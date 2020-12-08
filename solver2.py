@@ -72,6 +72,7 @@ def solve(G, s, load=None, moves=1):
         return {}, -1
     rooms = [r for r in rooms if len(r) != 0]
     return generate_dic_from_lists(rooms), len(rooms)
+    
     """
     if moves == 0:
         r = check_switches(G, s, load=load)
@@ -97,6 +98,7 @@ def solve(G, s, load=None, moves=1):
         return generate_dic_from_lists(last), len(last)
     
     
+    
 
 # Here's an example of how to run your solver.
 
@@ -113,7 +115,7 @@ if __name__ == '__main__':
 """
 
 def main():
-    already_done = [1, 2, 4, 6, 7, 9, 10, 12, 14, 15, 16, 17, 18, 26, 29, 33, 34, 38, 39, 40, 43, 46, 47, 51, 52, 53, 54, 55, 56, 59, 60, 63, 64, 70, 73, 74, 76, 77, 81, 84, 88, 89, 90, 96, 100, 101, 103, 105, 109, 111, 112, 113, 114, 115, 117, 119, 122, 123, 125, 128, 129, 131, 132, 134, 136, 140, 141, 143, 145, 147, 151, 152, 157, 159, 160, 161, 162, 166, 167, 169, 172, 174, 175, 178, 184, 187, 199, 201, 202, 203, 206, 207, 208, 209, 213, 216, 217, 218, 220, 222, 223, 226, 227, 230, 233, 235, 237, 238, 241]
+    already_done = [1, 2, 4, 6, 7, 9, 10, 12, 14, 15, 16, 17, 18, 19, 20, 26, 29, 30, 33, 34, 35, 38, 39, 40, 41, 43, 46, 47, 50, 51, 52, 53, 54, 55, 56, 58, 59, 60, 63, 64, 70, 73, 74, 76, 77, 79, 81, 83, 84, 85, 88, 89, 90, 96, 100, 101, 103, 105, 109, 110, 111, 112, 113, 114, 115, 117, 119, 121, 122, 123, 125, 128, 129, 131, 132, 134, 136, 137, 140, 141, 143, 145, 147, 151, 152, 156, 157, 158, 159, 160, 161, 162, 166, 167, 169, 172, 174, 175, 177, 178, 181, 184, 187, 196, 199, 201, 202, 203, 206, 207, 208, 209, 213, 216, 217, 218, 220, 222, 223, 226, 227, 230, 233, 235, 237, 238, 240, 241]
     # already_done = [7, 18, 33, 43, 51, 54, 56, 65, 69, 73, 77, 81, 91, 112, 114, 121, 123, 127, 131, 134, 151, 169, 171, 174, 178, 184, 187, 201, 202, 207, 213, 215, 222]
     """
     inputs = glob.glob('compinputslarge/*')
@@ -147,9 +149,9 @@ def main():
         if k != -1:
             assert is_valid_solution(D, G, s, k)
             write_output_file(D, output_path)
-            print("done, used " + str(k) + " rooms, happiness " + str(calculate_happiness(D, G)))
-    else:
-        print("Already done")
+            #print("done, used " + str(k) + " rooms, happiness " + str(calculate_happiness(D, G)))
+    #else:
+        #print("Already done")
     
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)

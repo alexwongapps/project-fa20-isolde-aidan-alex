@@ -91,7 +91,7 @@ def true_random(graph, stress_budget, start_greedy_at=None):
     max_happiness = (None, -1)
     start_time = int(time.time())
     iters = 0
-    while int(time.time()) - start_time < 225:
+    while int(time.time()) - start_time < 118:
         iters += 1
         #orig = origorig.copy()
         #shuffle(orig)

@@ -72,6 +72,7 @@ def solve(G, s, load=None, moves=1):
         return {}, -1
     rooms = [r for r in rooms if len(r) != 0]
     return generate_dic_from_lists(rooms), len(rooms)
+    
     """
     if moves == 0:
         r = check_switches(G, s, load=load)
@@ -97,6 +98,7 @@ def solve(G, s, load=None, moves=1):
         return generate_dic_from_lists(last), len(last)
     
     
+    
 
 # Here's an example of how to run your solver.
 
@@ -114,7 +116,7 @@ if __name__ == '__main__':
 
 def main():
     # already_done = [1, 2, 6, 7, 9, 12, 14, 15, 16, 18, 26, 33, 34, 38, 39, 43, 46, 51, 52, 53, 54, 55, 56, 59, 60, 63, 64, 70, 73, 74, 77, 81, 84, 88, 89, 90, 100, 101, 103, 105, 109, 111, 112, 114, 115, 117, 119, 122, 123, 125, 128, 131, 132, 134, 140, 143, 145, 147, 151, 152, 157, 160, 161, 166, 167, 169, 174, 175, 178, 184, 187, 201, 202, 203, 206, 207, 208, 209, 213, 216, 217, 218, 220, 222, 226, 227, 230, 233, 235, 237, 241]
-    already_done = [7, 10, 14, 18, 33, 34, 38, 43, 47, 50, 51, 54, 56, 65, 69, 73, 76, 77, 81, 88, 90, 91, 112, 114, 121, 123, 127, 128, 131, 134, 145, 151, 157, 161, 169, 171, 174, 175, 178, 184, 187, 201, 202, 207, 213, 215, 222]
+    already_done = [7, 10, 14, 18, 29, 33, 34, 38, 43, 47, 50, 51, 54, 56, 65, 69, 73, 76, 77, 81, 88, 90, 91, 106, 112, 114, 121, 123, 127, 128, 129, 131, 134, 140, 145, 151, 157, 161, 169, 171, 172, 173, 174, 175, 178, 184, 187, 188, 201, 202, 206, 207, 213, 215, 222]
     """
     inputs = glob.glob('compinputslarge/*')
     couldnt = []
@@ -147,9 +149,9 @@ def main():
         if k != -1:
             assert is_valid_solution(D, G, s, k)
             write_output_file(D, output_path)
-            print("done, used " + str(k) + " rooms, happiness " + str(calculate_happiness(D, G)))
-    else:
-        print("Already done")
+            #print("done, used " + str(k) + " rooms, happiness " + str(calculate_happiness(D, G)))
+    #else:
+        #print("Already done")
     
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
